@@ -22,7 +22,7 @@ type Screen interface {
 	Init() error
 
 	// Fini finalizes the screen also releasing resources.
-	Fini()
+	Fini() error
 
 	// Clear erases the screen.  The contents of any screen buffers
 	// will also be cleared.  This has the logical effect of

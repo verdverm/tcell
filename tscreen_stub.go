@@ -24,7 +24,7 @@ func (t *tScreen) termioInit() error {
 	return ErrNoScreen
 }
 
-func (t *tScreen) termioFini() {
+func (t *tScreen) termioFini() error {
 }
 
 func (t *tScreen) getWinSize() (int, int, error) {

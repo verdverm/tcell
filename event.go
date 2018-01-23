@@ -51,3 +51,40 @@ func (e *EventTime) SetEventNow() {
 type EventHandler interface {
 	HandleEvent(Event) bool
 }
+
+type EventCustom struct {
+	t    time.Time
+	typ  string
+	path string
+	data interface{}
+}
+
+func NewCustomEvent(typ, path string, data interface{}) *EventCustom {
+	return &EventCustom{
+		t:    time.Now(),
+		typ:  typ,
+		path: path,
+		data: data,
+	}
+}
+
+// When returns the time when this Event was created, which should closely
+// match the time when the key was pressed.
+func (ev *EventCustom) When() time.Time {
+	return ev.t
+}
+
+// Type returns a string type defined by the application semantics
+func (ev *EventCustom) Type() string {
+	return ev.typ
+}
+
+// Type returns a path defined by the application semantics
+func (ev *EventCustom) Path() string {
+	return ev.path
+}
+
+// Data returns the data portion of the custom event
+func (ev *EventCustom) Data() interface{} {
+	return ev.data
+}

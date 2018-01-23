@@ -136,17 +136,20 @@ func (s *simscreen) Init() error {
 	return nil
 }
 
-func (s *simscreen) Fini() {
+func (s *simscreen) Fini() error {
 	s.Lock()
 	s.fini = true
 	s.back.Resize(0, 0)
 	s.Unlock()
 	if s.quit != nil {
 		close(s.quit)
+		s.quit = nil
 	}
 	s.physw = 0
 	s.physh = 0
 	s.front = nil
+
+	return nil
 }
 
 func (s *simscreen) SetStyle(style Style) {

@@ -20,6 +20,8 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
+
+	"github.com/pkg/errors"
 )
 
 // #include <termios.h>
@@ -173,15 +175,21 @@ func (t *tScreen) termioInit() error {
 
 failed:
 	if t.in != nil {
-		t.in.Close()
+		err := t.in.Close()
+		if err != nil {
+			return errors.Wrapf(err, "in tScreen_posix.termioInit() t.in.Close()")
+		}
 	}
 	if t.out != nil {
-		t.out.Close()
+		err := t.out.Close()
+		if err != nil {
+			return errors.Wrapf(err, "in tScreen_posix.termioInit() t.out.Close()")
+		}
 	}
 	return e
 }
 
-func (t *tScreen) termioFini() {
+func (t *tScreen) termioFini() error {
 
 	signal.Stop(t.sigwinch)
 
@@ -190,11 +198,19 @@ func (t *tScreen) termioFini() {
 	if t.out != nil {
 		fd := C.int(t.out.Fd())
 		C.tcsetattr(fd, C.TCSANOW|C.TCSAFLUSH, &t.tiosp.tios)
-		t.out.Close()
+		err := t.out.Close()
+		if err != nil {
+			return errors.Wrapf(err, "in tScreen_posix.termioFini() t.out.Close()")
+		}
 	}
 	if t.in != nil {
-		t.in.Close()
+		err := t.in.Close()
+		if err != nil {
+			return errors.Wrapf(err, "in tScreen_posix.termioFini() t.in.Close()")
+		}
 	}
+
+	return nil
 }
 
 func (t *tScreen) getWinSize() (int, int, error) {
