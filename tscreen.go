@@ -1300,6 +1300,10 @@ func (t *tScreen) mainLoop() {
 
 func (t *tScreen) inputLoop() {
 
+	t.inputLoopWrapped()
+}
+
+func (t *tScreen) inputLoopWrapped() {
 	for {
 		chunk := make([]byte, 128)
 		n, e := t.in.Read(chunk)
@@ -1308,7 +1312,7 @@ func (t *tScreen) inputLoop() {
 		case nil:
 		default:
 			t.PostEvent(NewEventError(e))
-			return
+			continue
 		}
 		t.keychan <- chunk[:n]
 	}
