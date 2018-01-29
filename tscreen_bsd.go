@@ -95,7 +95,7 @@ failed:
 	return e
 }
 
-func (t *tScreen) termioFini() {
+func (t *tScreen) termioFini() error {
 
 	signal.Stop(t.sigwinch)
 
@@ -117,6 +117,7 @@ func (t *tScreen) termioFini() {
 			return errors.Wrapf(err, "in tScreen_bsd.termioFini() t.in.Close()")
 		}
 	}
+	return nil
 }
 
 func (t *tScreen) getWinSize() (int, int, error) {
